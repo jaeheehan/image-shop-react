@@ -4,6 +4,11 @@ import HomePage from "./pages/HomePage"
 import SignInPage from "./pages/auth/SignInPage";
 import AdminSetupPage from "./pages/member/AdminSetupPage"
 
+export interface LoginInput {
+    userId: string;
+    password: string;
+}
+
 function App(){
   return (
       <>
