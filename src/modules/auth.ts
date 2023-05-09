@@ -5,6 +5,7 @@ import * as api from "../lib/api"
 import client from "../lib/client"
 import { AxiosResponse } from "axios";
 import { LoginInput, MyInfo } from "../App";
+import Cookies from "js-cookie";
 
 const SET_ACCESS_TOKEN = "auth/SET_ACCESS_TOKEN";
 
@@ -30,7 +31,10 @@ function* loginSaga(action: ReturnType<typeof login>){
 
         yield put(setAccessToken(accessToken));
 
-        client.defaults.headers.common.Authorization = `Bear ${accessToken}`;
+        client.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+        Cookies.set("accessToken", accessToken, {expires: 1});
+
     }catch (e) {
         console.log(e);
     }

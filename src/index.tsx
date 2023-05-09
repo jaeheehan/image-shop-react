@@ -11,13 +11,35 @@ import rootReducer, {rootSaga} from "./modules";
 import {composeWithDevTools} from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 
+import Cookies from "js-cookie";
+import { setAccessToken, checkMyInfo } from "./modules/auth";
+import client from "./lib/client"
+
 const sagaMiddleware = createSagaMiddleware();
 
 const store =createStore(
     rootReducer,
     composeWithDevTools(applyMiddleware(sagaMiddleware)));
 
+function loadUser() {
+    try {
+        const savedToken = Cookies.get("accessToken")
+
+        if(!savedToken) return;
+
+        store.dispatch(setAccessToken(savedToken))
+
+        client.defaults.headers.common.Authorization = `Bearer ${savedToken}`;
+
+        store.dispatch(checkMyInfo())
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 sagaMiddleware.run(rootSaga);
+
+loadUser();
 
 // @ts-ignore
 const myRouter = <BrowserRouter>
