@@ -18,6 +18,12 @@ export interface MyInfo {
     authList: AuthInfo[];
 }
 
+export interface CodeGroup {
+    groupCode: string;
+    groupName: string;
+    regDate: string;
+}
+
 function App(){
   return (
       <>
