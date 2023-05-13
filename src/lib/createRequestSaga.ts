@@ -1,6 +1,7 @@
 import { createAction } from "redux-actions";
 import { call , put} from "redux-saga/effects";
 import { AxiosResponse} from "axios";
+import {endLoading, startLoading} from "../modules/loading";
 
 export default function createRequestSaga(type:string, request:any){
 
@@ -11,6 +12,13 @@ export default function createRequestSaga(type:string, request:any){
     const callFailure = createAction(CALL_FAILURE, (err:any) => err);
 
     return function*(action:any){
-
+        yield put(startLoading(type));
+        try{
+            const response: AxiosResponse = yield call(request, action.payload);
+            yield put(callSuccess(response.data));
+        }catch(e){
+            yield put(callFailure(e));
+        }
+        yield put(endLoading(type));
     }
 }
